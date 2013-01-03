@@ -1,8 +1,10 @@
 require "spec.bootstrap"
 
 describe('table recording #record', function()
-    pending('contains record method', function()
-        local object = {}
+    it('contains record method', function()
+
+        local object = require "recordable"({})
         assert.has_method(object, 'record')
+
     end)
 end)
