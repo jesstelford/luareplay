@@ -1,8 +1,8 @@
 return (function(me)
     
-    assert(me.record == nil, "'record' method already exists on " .. tostring(me))
+    assert(me.serialize == nil, "'record' method already exists on " .. tostring(me))
 
-    me.record = function()
+    me.serialize = function()
 
     end
 
