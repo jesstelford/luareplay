@@ -1,8 +1,6 @@
 return (function(me)
     
-    if me.record ~= nil then
-        error('record method already exists on ' .. me)
-    end
+    assert(me.record == nil, "'record' method already exists on " .. tostring(me))
 
     me.record = function()
 
