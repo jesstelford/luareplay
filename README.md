@@ -8,6 +8,9 @@ replay.
 
 [Busted, Elegant Lua unit testing](http://olivinelabs.com/busted/)
 
+    $ cd /path/to/luareplay
+    $ busted
+
 # Notes
 
 ## Serialization
