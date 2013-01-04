@@ -1,7 +1,7 @@
-local serialize = require("serpent.src.serpent").dump
 
-return (function(me)
+return (function(me, serpent)
     
+    assert(serpent.dump, 'serpent library must be present')
     assert(me.serialize == nil, "'record' method already exists on " .. tostring(me))
 
     me.serialize = function()
