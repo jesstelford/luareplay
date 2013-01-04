@@ -49,7 +49,7 @@ describe('table recording module #record', function()
         assert.is_equal(type(serialized), 'table')
     end)
 
-    pending('returns only nil, boolean, number, string, table types when serialized', function()
+    it('returns only nil, boolean, number, string, table types when serialized', function()
 
         local recordable = require "recordable"
 
@@ -80,7 +80,7 @@ describe('table recording module #record', function()
 
     end)
 
-    pending('returns only whitelisted params when serialized', function()
+    it('returns only whitelisted params when serialized', function()
 
         local recordable = require "recordable"
 
@@ -115,7 +115,7 @@ describe('table recording module #record', function()
 
     end)
 
-    pending('returns nested tables when serialized', function()
+    it('returns nested tables when serialized', function()
 
         local recordable = require "recordable"
 

@@ -5,7 +5,13 @@ return (function(me, serpent, whitelist)
     assert(whitelist == nil or type(whitelist) == 'table', 'whitelist must be a table of properties to record')
     assert(me.serialize == nil, "'record' method already exists on " .. tostring(me))
 
-    local serpentOptions = {}
+    local serpentOptions = {
+        valtypeignore = {
+            ['function'] = true,
+            ['userdata'] = true,
+            ['thread'] = true
+        }
+    }
 
     -- only set whitelist if options passed in
     for k,v in pairs(whitelist or {}) do
