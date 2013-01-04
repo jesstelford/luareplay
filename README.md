@@ -1,6 +1,6 @@
 # Record and Replay
 
-Record and replay table properties based on discrete time steps __Key Frames__
+Record and replay table properties based on discrete time steps ( __Key Frames__ )
 with the ability to interpolate between Frames, allowing time independant
 replay.
 
