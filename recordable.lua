@@ -1,4 +1,4 @@
-local serialize = require("serpent").dump
+local serialize = require("serpent.src.serpent").dump
 
 return (function(me)
     

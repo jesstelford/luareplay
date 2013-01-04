@@ -15,7 +15,7 @@ replay.
 
 ## Serialization
 
-Serialization of tables is performed by a [fork of the serpent library](https://github.com/jesstelford/serpent/tree/keywhitelist)
+Serialization of tables is performed by [Paul Kulchenko's](http://notebook.kulchenko.com/) [serpent library](https://github.com/pkulchenko/serpent)
 
 # License
 
