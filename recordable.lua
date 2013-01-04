@@ -14,7 +14,7 @@ return (function(me, serpent, whitelist)
     end
 
     me.serialize = function()
-        return serpent(me, serpentOptions)
+        return loadstring(serpent.dump(me, serpentOptions))()
     end
 
     return me

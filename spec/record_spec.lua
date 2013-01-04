@@ -42,6 +42,47 @@ describe('table recording module #record', function()
         assert.has_no.errors(function() require "recordable"(object, serpent, {x = true}) end)
     end)
 
+    it('returns a table when serialized', function()
+        local recordable = require "recordable"
+        local object = recordable({}, serpent)
+        local serialized = object.serialize()
+        assert.is_equal(type(serialized), 'table')
+    end)
+
+    pending('returns all params by default when serialized', function()
+
+        local recordable = require "recordable"
+
+        local object = recordable(
+            {
+                foo = 'bar',
+                [true] = false,
+                [1] = 0
+            },
+            serpent
+        )
+
+        local serialized = object.serialize()
+
+        assert.are.same(serialized, object)
+
+    end)
+
+    it('returns only whitelisted params by default when serialized', function()
+
+        local recordable = require "recordable"
+
+        local object = {
+            foo = 'bar',
+            [true] = false,
+            [1] = 0
+        }
+
+        local serialized = recordable(object, serpent)
+        assert.are.same(serialized, object)
+
+    end)
+
 end)
 
 describe('recording modifications to table', function()
