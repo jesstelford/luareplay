@@ -49,7 +49,7 @@ describe('table recording module #record', function()
         assert.is_equal(type(serialized), 'table')
     end)
 
-    pending('returns all params by default when serialized', function()
+    pending('returns only nil, boolean, number, string, table types when serialized', function()
 
         local recordable = require "recordable"
 
@@ -57,29 +57,87 @@ describe('table recording module #record', function()
             {
                 foo = 'bar',
                 [true] = false,
-                [1] = 0
+                [1] = 0,
+                [2] = nil,
+                tab = {},
+                nofunc = function() end
             },
             serpent
         )
 
         local serialized = object.serialize()
 
-        assert.are.same(serialized, object)
+        assert.are.same(
+            serialized,
+            {
+                foo = 'bar',
+                [true] = false,
+                [1] = 0,
+                [2] = nil,
+                tab = {}
+            }
+        )
 
     end)
 
-    it('returns only whitelisted params by default when serialized', function()
+    pending('returns only whitelisted params when serialized', function()
 
         local recordable = require "recordable"
 
-        local object = {
-            foo = 'bar',
-            [true] = false,
-            [1] = 0
+        local whitelist = {
+            foo = true,
+            [1] = true
         }
 
-        local serialized = recordable(object, serpent)
-        assert.are.same(serialized, object)
+        local object = recordable(
+            {
+                foo = 'bar',
+                [true] = false,
+                [1] = 0,
+                [2] = nil,
+                tab = {},
+                nofunc = function() end
+            },
+            serpent,
+            whitelist
+        )
+
+        local serialized = object.serialize()
+
+        assert.are.same(
+            serialized,
+            {
+                foo = 'bar',
+                [1] = 0
+            }
+        )
+
+
+    end)
+
+    pending('returns nested tables when serialized', function()
+
+        local recordable = require "recordable"
+
+        local object = recordable(
+            {
+                tab = {
+                    foo = 'bar'
+                }
+            },
+            serpent
+        )
+
+        local serialized = object.serialize()
+
+        assert.are.same(
+            serialized,
+            {
+                tab = {
+                    foo = 'bar'
+                }
+            }
+        )
 
     end)
 
