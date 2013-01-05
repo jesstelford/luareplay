@@ -2,49 +2,47 @@ require "spec.bootstrap"
 
 describe('table recording module #record', function()
 
-    local serpent = require("serpent.src.serpent")
-
     it('contains serialize method when created', function()
-        local object = require "recordable"({}, serpent)
+        local object = require "recordable"({})
         assert.has_method(object, 'serialize')
     end)
 
     it('adds serialize method when extending', function()
         local object = {}
-        object = require "recordable"(object, serpent)
+        object = require "recordable"(object)
         assert.has_method(object, 'serialize')
     end)
 
     it('modifies the original object', function()
         local object = {}
-        require "recordable"(object, serpent)
+        require "recordable"(object)
         assert.has_method(object, 'serialize')
     end)
 
     it('throws error when serialize already exists', function()
         local object = {serialize = 1}
-        assert.has_error(function() require "recordable"(object, serpent) end)
+        assert.has_error(function() require "recordable"(object) end)
     end)
 
     it('throws error when whitelist not table', function()
-        assert.has_error(function() require "recordable"({}, serpent, function() end) end)
-        assert.has_error(function() require "recordable"({}, serpent, "foo") end)
-        assert.has_error(function() require "recordable"({}, serpent, true) end)
+        assert.has_error(function() require "recordable"({}, function() end) end)
+        assert.has_error(function() require "recordable"({}, "foo") end)
+        assert.has_error(function() require "recordable"({}, true) end)
     end)
 
     it('accepts empty whitelist table', function()
         local object = {}
-        assert.has_no.errors(function() require "recordable"(object, serpent, {}) end)
+        assert.has_no.errors(function() require "recordable"(object, {}) end)
     end)
 
     it('accepts whitelist table', function()
         local object = {}
-        assert.has_no.errors(function() require "recordable"(object, serpent, {x = true}) end)
+        assert.has_no.errors(function() require "recordable"(object, {x = true}) end)
     end)
 
     it('returns a table when serialized', function()
         local recordable = require "recordable"
-        local object = recordable({}, serpent)
+        local object = recordable({})
         local serialized = object.serialize()
         assert.is_equal(type(serialized), 'table')
     end)
@@ -61,21 +59,20 @@ describe('table recording module #record', function()
                 [2] = nil,
                 tab = {},
                 nofunc = function() end
-            },
-            serpent
+            }
         )
 
         local serialized = object.serialize()
 
         assert.are.same(
-            serialized,
             {
                 foo = 'bar',
                 [true] = false,
                 [1] = 0,
                 [2] = nil,
                 tab = {}
-            }
+            },
+            serialized
         )
 
     end)
@@ -98,18 +95,17 @@ describe('table recording module #record', function()
                 tab = {},
                 nofunc = function() end
             },
-            serpent,
             whitelist
         )
 
         local serialized = object.serialize()
 
         assert.are.same(
-            serialized,
             {
                 foo = 'bar',
                 [1] = 0
-            }
+            },
+            serialized
         )
 
 
@@ -124,19 +120,18 @@ describe('table recording module #record', function()
                 tab = {
                     foo = 'bar'
                 }
-            },
-            serpent
+            }
         )
 
         local serialized = object.serialize()
 
         assert.are.same(
-            serialized,
             {
                 tab = {
                     foo = 'bar'
                 }
-            }
+            },
+            serialized
         )
 
     end)

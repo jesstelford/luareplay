@@ -18,12 +18,6 @@ replay.
     $ cd /path/to/luareplay
     $ busted
 
-# Notes
-
-## Serialization
-
-Serialization of tables is performed by [Paul Kulchenko's](http://notebook.kulchenko.com/) [serpent library](https://github.com/pkulchenko/serpent)
-
 # License
 
 This software is covered under the FreeBSD License. See LICENSE for more.
