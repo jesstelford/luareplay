@@ -77,6 +77,35 @@ describe('table recording module #record', function()
 
     end)
 
+    it('returns only boolean, number, string keys when serialized', function()
+
+        local recordable = require "recordable"
+
+        local object = recordable(
+            {
+                foo = 'bar',
+                [true] = false,
+                [1] = 0,
+                ['bar'] = nil,
+                [{}] = 'a table',
+                [function() end] = 'a func'
+            }
+        )
+
+        local serialized = object.serialize()
+
+        assert.are.same(
+            {
+                foo = 'bar',
+                [true] = false,
+                [1] = 0,
+                ['bar'] = nil
+            },
+            serialized
+        )
+
+    end)
+
     it('returns only whitelisted params when serialized', function()
 
         local recordable = require "recordable"
