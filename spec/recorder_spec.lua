@@ -12,6 +12,10 @@ describe('recorder module #record', function()
         assert.has_method(Recorder, 'getRecording')
     end)
 
+    it('has a getRecordingAfter method', function()
+        assert.has_method(Recorder, 'getRecordingAfter')
+    end)
+
 end)
 
 describe('recorder record method #record', function()
@@ -186,6 +190,86 @@ describe('recorder getRecording method #record', function()
         Recorder:record(1, object, 'foo')
 
         assert.is.equal(nil, Recorder:getRecording(1, 'bar'))
+    end)
+
+end)
+
+describe('recorder getRecordingAfter method #record', function()
+
+    describe('group parameter', function()
+
+        it('accepts string group name', function()
+            local Recorder = require "recorder"()
+            assert.has_no.errors(function() Recorder:getRecordingAfter(1, 'foo') end)
+        end)
+
+        it('doesnt accept number group name', function()
+            local Recorder = require "recorder"()
+            assert.has_error(function() Recorder:getRecordingAfter(1, 1) end)
+        end)
+
+        it('doesnt accept boolean group name', function()
+            local Recorder = require "recorder"()
+            assert.has_error(function() Recorder:getRecordingAfter(1, true) end)
+        end)
+
+        it('doesnt accept table group name', function()
+            local Recorder = require "recorder"()
+            assert.has_error(function() Recorder:getRecordingAfter(1, {}) end)
+        end)
+
+        it('doesnt accept function group name', function()
+            local Recorder = require "recorder"()
+            assert.has_error(function() Recorder:getRecordingAfter(1, function() end) end)
+        end)
+
+    end)
+
+    it('correctly returns recorded table inserted after', function()
+        local Recorder = require "recorder"()
+        local objectFoo = require "recordable"({})
+        local objectBar = require "recordable"({})
+        
+        Recorder:record('foo', objectFoo)
+        Recorder:record('bar', objectBar)
+
+        local serializedBar = objectBar:serialize();
+
+        local recordingBar = Recorder:getRecordingAfter('foo')
+
+        assert.are.same(recordingBar, serializedBar)
+    end)
+
+    it('returns nil for empty recording list', function()
+        local Recorder = require "recorder"()
+        assert.is.equal(nil, Recorder:getRecordingAfter(1))
+    end)
+
+    it('returns nil for empty recording list in given group', function()
+        local Recorder = require "recorder"()
+        local object = require "recordable"({})
+        
+        Recorder:record(1, object, 'foo')
+
+        assert.is.equal(nil, Recorder:getRecordingAfter(1, 'bar'))
+    end)
+
+    it('returns nil for next empty recording list', function()
+        local object = require "recordable"({})
+        local Recorder = require "recorder"()
+
+        Recorder:record(1, object)
+
+        assert.is.equal(nil, Recorder:getRecordingAfter(1))
+    end)
+
+    it('returns nil for next empty recording list in group', function()
+        local Recorder = require "recorder"()
+        local object = require "recordable"({})
+        
+        Recorder:record(1, object, 'foo')
+
+        assert.is.equal(nil, Recorder:getRecordingAfter(1, 'foo'))
     end)
 
 end)

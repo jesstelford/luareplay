@@ -59,6 +59,27 @@ return (function()
         return nil
     end
 
+    --- Get a snapshot of the next recording
+    -- @param id(mixed) The id of the previous recording
+    -- @param group(string) The group the recoding was stored under. Default: 'global'
+    -- @return table The item recorded.
+    function me:getRecordingAfter(id, group)
+
+        assert(id ~= nil, 'id must be set')
+        group = initGroup(group)
+
+        if recordings[group].byId[id] ~= nil then
+            local index = recordings[group].byId[id].index
+            local nextId = recordings[group].indexToId[index + 1]
+
+            if nextId ~= nil then
+                return recordings[group].byId[nextId].recording
+            end
+        end
+
+        return nil
+    end
+
     return me
 
 end)
