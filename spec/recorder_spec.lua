@@ -108,6 +108,37 @@ end)
 
 describe('recorder getRecording method #record', function()
 
+    describe('group parameter', function()
+
+        it('accepts string group name', function()
+            local Recorder = require "recorder"()
+            local object = require "recordable"({})
+            Recorder:record(1, object, 'foo')
+            assert.has_no.errors(function() Recorder:getRecording(1, 'foo') end)
+        end)
+
+        it('doesnt accept number group name', function()
+            local Recorder = require "recorder"()
+            assert.has_error(function() Recorder:getRecording(1, 1) end)
+        end)
+
+        it('doesnt accept boolean group name', function()
+            local Recorder = require "recorder"()
+            assert.has_error(function() Recorder:getRecording(1, true) end)
+        end)
+
+        it('doesnt accept table group name', function()
+            local Recorder = require "recorder"()
+            assert.has_error(function() Recorder:getRecording(1, {}) end)
+        end)
+
+        it('doesnt accept function group name', function()
+            local Recorder = require "recorder"()
+            assert.has_error(function() Recorder:getRecording(1, function() end) end)
+        end)
+
+    end)
+
     it('correctly returns recorded table', function()
         local Recorder = require "recorder"()
         local object = require "recordable"({})
