@@ -53,6 +53,12 @@ describe('recorder record method #record', function()
         assert.has_error(function() Recorder:record(1, object) end)
     end)
 
+    it('checks for serialize method on recordable object', function()
+        local Recorder = require "recorder"()
+        local object = {}
+        assert.has_error(function() Recorder:record(1, object) end)
+    end)
+
     it('can record the same object multiple times', function()
         local Recorder = require "recorder"()
         local object = require "recordable"({})
