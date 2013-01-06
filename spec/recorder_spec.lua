@@ -158,6 +158,9 @@ describe('recorder getRecording method #record', function()
         assert.are.same(recording, serialized)
     end)
 
+    pending('returns correct recording with same id as recording in another group', function()
+    end)
+
     pending('returns nil for non-existing recording', function()
     end)
 
