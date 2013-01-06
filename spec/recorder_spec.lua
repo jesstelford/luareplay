@@ -16,6 +16,36 @@ end)
 
 describe('recorder record method #record', function()
 
+    it('accepts number IDs', function()
+        local Recorder = require "recorder"()
+        local object = require "recordable"({})
+        assert.has_no.errors(function() Recorder:record(1, object) end)
+    end)
+
+    it('accepts bool IDs', function()
+        local Recorder = require "recorder"()
+        local object = require "recordable"({})
+        assert.has_no.errors(function() Recorder:record(true, object) end)
+    end)
+
+    it('accepts string IDs', function()
+        local Recorder = require "recorder"()
+        local object = require "recordable"({})
+        assert.has_no.errors(function() Recorder:record('foo', object) end)
+    end)
+
+    it('accepts table IDs', function()
+        local Recorder = require "recorder"()
+        local object = require "recordable"({})
+        assert.has_no.errors(function() Recorder:record({}, object) end)
+    end)
+
+    it('accepts function IDs', function()
+        local Recorder = require "recorder"()
+        local object = require "recordable"({})
+        assert.has_no.errors(function() Recorder:record(function() end, object) end)
+    end)
+
     it('only accepts unique IDs', function()
         local Recorder = require "recorder"()
         local object = require "recordable"({})
