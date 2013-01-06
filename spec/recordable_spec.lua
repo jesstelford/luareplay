@@ -42,7 +42,7 @@ describe('table recording module #record', function()
 
 end)
 
-describe('recording modifications to table', function()
+describe('recording modifications to table #record', function()
 
     it('returns a table when serialized', function()
         local recordable = require "recordable"
