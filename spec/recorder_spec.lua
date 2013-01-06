@@ -104,7 +104,11 @@ describe('recorder record method #record', function()
         Recorder:record(1, object)
     end)
 
-    pending('can set same id in different groups', function()
+    it('can set same id in different groups', function()
+        local Recorder = require "recorder"()
+        local object = require "recordable"({})
+        Recorder:record(1, object, 'foo')
+        assert.has_no.errors(function() Recorder:record(1, object, 'bar') end)
     end)
 
 end)
