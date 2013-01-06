@@ -10,7 +10,10 @@ return (function()
         assert(group == nil or type(group) == 'string', "group must be a string name, or nil for default ('global' group)");
 
         -- create the group if not exist
-        recordings[group] = recordings[group] or {}
+        recordings[group] = recordings[group] or {
+            indexToId = {},
+            byId = {} -- array of tables: {recording, index}
+        }
 
         return group
     end
@@ -25,13 +28,19 @@ return (function()
 
         group = initGroup(group)
 
-        assert(recordings[group][id] == nil, 'id must be unique, for example; a timestamp')
+        assert(recordings[group].byId[id] == nil, 'id must be unique, for example; a timestamp')
 
         -- check the object has the correct method
         assert(type(recordable.serialize) == 'function', "object must have a serialize method, for example; a 'recordable'")
 
+        -- Set the id into the index table
+        table.insert(recordings[group].indexToId, id)
+
         -- actually perform the recording
-        recordings[group][id] = recordable:serialize()
+        recordings[group].byId[id] = {
+            recording = recordable:serialize(),
+            index = #recordings[group].indexToId -- the count of items is the same as the highest index for numerically keyed tables
+        }
     end
 
     --- Get a snapshot of a recording
@@ -39,9 +48,15 @@ return (function()
     -- @param group(string) The group the recoding was stored under. Default: 'global'
     -- @return table The item recorded.
     function me:getRecording(id, group)
+
         assert(id ~= nil, 'id must be set')
         group = initGroup(group)
-        return recordings[group][id]
+
+        if recordings[group].byId[id] ~= nil then
+            return recordings[group].byId[id].recording
+        end
+
+        return nil
     end
 
     return me
