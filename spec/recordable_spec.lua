@@ -40,6 +40,10 @@ describe('table recording module #record', function()
         assert.has_no.errors(function() require "recordable"(object, {x = true}) end)
     end)
 
+end)
+
+describe('recording modifications to table', function()
+
     it('returns a table when serialized', function()
         local recordable = require "recordable"
         local object = recordable({})
@@ -167,8 +171,3 @@ describe('table recording module #record', function()
 
 end)
 
-describe('recording modifications to table', function()
-
-
-
-end)
