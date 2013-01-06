@@ -158,7 +158,22 @@ describe('recorder getRecording method #record', function()
         assert.are.same(recording, serialized)
     end)
 
-    pending('returns correct recording with same id as recording in another group', function()
+    it('returns correct recording with same id as recording in another group', function()
+        local Recorder = require "recorder"()
+        local objectFoo = require "recordable"({})
+        local objectBar = require "recordable"({})
+        
+        Recorder:record(1, objectFoo, 'foo')
+        Recorder:record(1, objectBar, 'bar')
+
+        local serializedFoo = objectFoo:serialize();
+        local serializedBar = objectBar:serialize();
+
+        local recordingFoo = Recorder:getRecording(1, 'foo')
+        local recordingBar = Recorder:getRecording(1, 'bar')
+
+        assert.are.same(recordingFoo, serializedFoo)
+        assert.are.same(recordingBar, serializedBar)
     end)
 
     pending('returns nil for non-existing recording', function()
