@@ -104,6 +104,9 @@ describe('recorder record method #record', function()
         Recorder:record(1, object)
     end)
 
+    pending('can set same id in different groups', function()
+    end)
+
 end)
 
 describe('recorder getRecording method #record', function()
@@ -149,6 +152,12 @@ describe('recorder getRecording method #record', function()
         local recording = Recorder:getRecording(1, 'foo')
 
         assert.are.same(recording, serialized)
+    end)
+
+    pending('returns nil for non-existing recording', function()
+    end)
+
+    pending('returns nil for non-existing recording in given group', function()
     end)
 
 end)
