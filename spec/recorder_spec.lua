@@ -119,8 +119,6 @@ describe('recorder getRecording method #record', function()
 
         it('accepts string group name', function()
             local Recorder = require "recorder"()
-            local object = require "recordable"({})
-            Recorder:record(1, object, 'foo')
             assert.has_no.errors(function() Recorder:getRecording(1, 'foo') end)
         end)
 
