@@ -53,6 +53,30 @@ describe('recorder record method #record', function()
         assert.has_error(function() Recorder:record(1, object) end)
     end)
 
+    it('doesnt accept number group name', function()
+        local Recorder = require "recorder"()
+        local object = require "recordable"({})
+        assert.has_error(function() Recorder:record(1, object, 1) end)
+    end)
+
+    it('doesnt accept boolean group name', function()
+        local Recorder = require "recorder"()
+        local object = require "recordable"({})
+        assert.has_error(function() Recorder:record(1, object, true) end)
+    end)
+
+    it('doesnt accept table group name', function()
+        local Recorder = require "recorder"()
+        local object = require "recordable"({})
+        assert.has_error(function() Recorder:record(1, object, {}) end)
+    end)
+
+    it('doesnt accept function group name', function()
+        local Recorder = require "recorder"()
+        local object = require "recordable"({})
+        assert.has_error(function() Recorder:record(1, object, function() end) end)
+    end)
+
     it('checks for serialize method on recordable object', function()
         local Recorder = require "recorder"()
         local object = {}
@@ -74,10 +98,10 @@ describe('recorder getRecording method #record', function()
         local Recorder = require "recorder"()
         local object = require "recordable"({})
         
-        Recorder:record(1, object)
+        Recorder:record(1, object, 'foo')
 
         local serialized = object:serialize();
-        local recording = Recorder:getRecording(1)
+        local recording = Recorder:getRecording(1, 'foo')
 
         assert.are.same(recording, serialized)
     end)
