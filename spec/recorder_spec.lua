@@ -181,7 +181,13 @@ describe('recorder getRecording method #record', function()
         assert.is.equal(nil, Recorder:getRecording(1))
     end)
 
-    pending('returns nil for non-existing recording in given group', function()
+    it('returns nil for non-existing recording in given group', function()
+        local Recorder = require "recorder"()
+        local object = require "recordable"({})
+        
+        Recorder:record(1, object, 'foo')
+
+        assert.is.equal(nil, Recorder:getRecording(1, 'bar'))
     end)
 
 end)
