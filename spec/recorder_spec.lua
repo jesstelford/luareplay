@@ -176,7 +176,9 @@ describe('recorder getRecording method #record', function()
         assert.are.same(recordingBar, serializedBar)
     end)
 
-    pending('returns nil for non-existing recording', function()
+    it('returns nil for non-existing recording', function()
+        local Recorder = require "recorder"()
+        assert.is.equal(nil, Recorder:getRecording(1))
     end)
 
     pending('returns nil for non-existing recording in given group', function()
