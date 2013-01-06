@@ -80,6 +80,24 @@ return (function()
         return nil
     end
 
+    function me:playback(fromId, group, stepFraction, interpolationMethod)
+
+        -- default to the first passed in id
+        fromId = fromId or recordings[group].indexToId[1]
+        group = initGroup(group)
+        
+        -- edge cases / early returns
+        if stepFraction >= 1.0 then
+            return me:getRecordingAfter(fromId, group)
+        elseif stepFraction <= 0.0 then
+            return me:getRecording(fromId, group)
+        end
+
+        -- TODO: Interpolate between two IDs (based on id / index / value?)
+        return me:getRecording(fromId, group)
+
+    end
+
     return me
 
 end)
