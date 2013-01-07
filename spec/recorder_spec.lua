@@ -340,6 +340,14 @@ describe('recorder playback method #record', function()
             assert.has_no.errors(function() Recorder:playback(1, 'foo', 1.0) end)
         end)
 
+        it('accepts nil fraction', function()
+            assert.has_no.errors(function() Recorder:playback(1, 'foo', nil) end)
+        end)
+
+        it('accepts false fraction', function()
+            assert.has_no.errors(function() Recorder:playback(1, 'foo', false) end)
+        end)
+
         it('doesnt accept string fraction', function()
             assert.has_error(function() Recorder:playback(1, 'foo', 'bar') end)
         end)
