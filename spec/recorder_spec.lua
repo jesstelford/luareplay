@@ -154,7 +154,7 @@ describe('recorder getRecording method #record', function()
 
     it('correctly returns recorded table', function()
         local Recorder = require "recorder"()
-        local object = require "recordable"({})
+        local object = require "recordable"({name = 'Foo'})
         
         Recorder:record(1, object, 'foo')
 
@@ -166,8 +166,8 @@ describe('recorder getRecording method #record', function()
 
     it('returns correct recording with same id as recording in another group', function()
         local Recorder = require "recorder"()
-        local objectFoo = require "recordable"({})
-        local objectBar = require "recordable"({})
+        local objectFoo = require "recordable"({name = 'Foo'})
+        local objectBar = require "recordable"({name = 'Bar'})
         
         Recorder:record(1, objectFoo, 'foo')
         Recorder:record(1, objectBar, 'bar')
@@ -231,8 +231,8 @@ describe('recorder getRecordingAfter method #record', function()
 
     it('correctly returns recorded table inserted after', function()
         local Recorder = require "recorder"()
-        local objectFoo = require "recordable"({})
-        local objectBar = require "recordable"({})
+        local objectFoo = require "recordable"({name = 'Foo'})
+        local objectBar = require "recordable"({name = 'Bar'})
         
         Recorder:record('foo', objectFoo)
         Recorder:record('bar', objectBar)
