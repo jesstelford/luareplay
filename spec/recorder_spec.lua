@@ -366,4 +366,35 @@ describe('recorder playback method #record', function()
 
     end)
 
+    describe('fraction edge cases', function()
+
+        local Recorder = require "recorder"()
+        local objectFoo = require "recordable"({name = 'Foo'})
+        local objectBar = require "recordable"({name = 'Bar'})
+        
+        Recorder:record('foo', objectFoo, 'global')
+        Recorder:record('bar', objectBar, 'global')
+
+        it("returns given id's recording when fraction < 0.0", function()
+            local recording = Recorder:playback('foo', 'global', -0.5)
+            assert.are.same(objectFoo:serialize(), recording)
+        end)
+
+        it("returns given id's recording when fraction == 0.0", function()
+            local recording = Recorder:playback('foo', 'global', 0.0)
+            assert.are.same(objectFoo:serialize(), recording)
+        end)
+
+        it("returns next id's recording when fraction == 1.0", function()
+            local recording = Recorder:playback('foo', 'global', 1.0)
+            assert.are.same(objectBar:serialize(), Recorder:getRecordingAfter('foo'))
+        end)
+
+        it("returns next id's recording when fraction > 1.0", function()
+            local recording = Recorder:playback('foo', 'global', 1.5)
+            assert.are.same(objectBar:serialize(), Recorder:getRecordingAfter('foo'))
+        end)
+
+    end)
+
 end)
