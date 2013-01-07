@@ -85,6 +85,8 @@ return (function()
         -- default to the first passed in id
         fromId = fromId or recordings[group].indexToId[1]
         group = initGroup(group)
+        stepFraction = stepFraction or 1.0
+        assert(type(stepFraction) == 'number', 'stepFraction must be a number from 0.0 to 1.0 inclusive')
         
         -- edge cases / early returns
         if stepFraction >= 1.0 then

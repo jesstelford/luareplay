@@ -16,6 +16,10 @@ describe('recorder module #record', function()
         assert.has_method(Recorder, 'getRecordingAfter')
     end)
 
+    it('has a playback method', function()
+        assert.has_method(Recorder, 'playback')
+    end)
+
 end)
 
 describe('recorder record method #record', function()
@@ -270,6 +274,88 @@ describe('recorder getRecordingAfter method #record', function()
         Recorder:record(1, object, 'foo')
 
         assert.is.equal(nil, Recorder:getRecordingAfter(1, 'foo'))
+    end)
+
+end)
+
+describe('recorder playback method #record', function()
+
+    describe('id parameter', function()
+
+        local Recorder = require "recorder"()
+
+        it('accepts number IDs', function()
+            assert.has_no.errors(function() Recorder:playback(1) end)
+        end)
+
+        it('accepts bool IDs', function()
+            assert.has_no.errors(function() Recorder:playback(true) end)
+        end)
+
+        it('accepts string IDs', function()
+            assert.has_no.errors(function() Recorder:playback('foo') end)
+        end)
+
+        it('accepts table IDs', function()
+            assert.has_no.errors(function() Recorder:playback({}) end)
+        end)
+
+        it('accepts function IDs', function()
+            assert.has_no.errors(function() Recorder:playback(function() end) end)
+        end)
+
+    end)
+
+    describe('group parameter', function()
+
+        local Recorder = require "recorder"()
+
+        it('accepts string group name', function()
+            assert.has_no.errors(function() Recorder:playback(1, 'foo') end)
+        end)
+
+        it('doesnt accept number group name', function()
+            assert.has_error(function() Recorder:playback(1, 1) end)
+        end)
+
+        it('doesnt accept boolean group name', function()
+            assert.has_error(function() Recorder:playback(1, true) end)
+        end)
+
+        it('doesnt accept table group name', function()
+            assert.has_error(function() Recorder:playback(1, {}) end)
+        end)
+
+        it('doesnt accept function group name', function()
+            assert.has_error(function() Recorder:playback(1, function() end) end)
+        end)
+
+    end)
+
+    describe('stepFraction parameter', function()
+
+        local Recorder = require "recorder"()
+
+        it('accepts number fraction', function()
+            assert.has_no.errors(function() Recorder:playback(1, 'foo', 1.0) end)
+        end)
+
+        it('doesnt accept string fraction', function()
+            assert.has_error(function() Recorder:playback(1, 'foo', 'bar') end)
+        end)
+
+        it('doesnt accept boolean fraction', function()
+            assert.has_error(function() Recorder:playback(1, 'foo', true) end)
+        end)
+
+        it('doesnt accept table fraction', function()
+            assert.has_error(function() Recorder:playback(1, 'foo', {}) end)
+        end)
+
+        it('doesnt accept function fraction', function()
+            assert.has_error(function() Recorder:playback(1, 'foo', function() end) end)
+        end)
+
     end)
 
 end)
