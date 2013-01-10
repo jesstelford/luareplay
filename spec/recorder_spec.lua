@@ -425,13 +425,19 @@ describe('recorder playback method #record', function()
             assert.are_same(recording, objectBar:serialize())
         end)
 
-        pending('returns the next id if the frame exists and id is null', function()
+        it('returns the next id if the frame exists and id is null', function()
+            nextFrameId, recording = Recorder:playback(4, nil)
+            assert.are_same(5, nextFrameId)
         end)
 
-        pending('returns the next id if the frame exists and id is in future', function()
+        it('returns the next id if the frame exists and id is in future', function()
+            nextFrameId, recording = Recorder:playback(1, 5)
+            assert.are_same(4, nextFrameId)
         end)
 
-        pending('returns the next id if the frame exists and id is in past', function()
+        it('returns the next id if the frame exists and id is in past', function()
+            nextFrameId, recording = Recorder:playback(4, 1)
+            assert.are_same(5, nextFrameId)
         end)
 
     end)
