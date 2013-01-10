@@ -1,8 +1,15 @@
 return (function()
     
-    local me = {}
-
     local recordings = {}
+
+    local function defaultPlaybackInterpolator(lastFrameId, requestedFrameId, nextFrameId, lastFrame, nextFrame)
+        return nextFrame
+    end
+
+    local me = {
+        playbackInterpolator = defaultPlaybackInterpolator,
+        greaterThan = nil
+    }
 
     local function initGroup(group)
         -- default group
@@ -16,6 +23,11 @@ return (function()
         }
 
         return group
+    end
+
+    function me:setGreaterThanComparison(greaterThan)
+        assert(type(greaterThan) == 'function', 'Must be a method which accepts a left and right hand value of the > operator, and returns a boolean')
+        self.greaterThan = greaterThan
     end
 
     --- Take a snapshot recording of the given object
@@ -80,23 +92,92 @@ return (function()
         return nil
     end
 
-    function me:playback(fromId, group, stepFraction, interpolationMethod)
+    --- Playback the recording, passing values through to an interpolation
+    -- method if exact Id not found
+    -- @param desiredFrameId(mixed) The frameId you want to playback
+    -- @param nextFrameId(mixed|nil) The next recorded Key Frame Id (such as returned from previous calls to playback())
+    -- @return nextFrameId, recording
+    function me:playback(desiredFrameId, nextFrameId, group)
 
-        -- default to the first passed in id
-        fromId = fromId or recordings[group].indexToId[1]
+        -- default to the first recorded id
         group = initGroup(group)
-        stepFraction = stepFraction or 1.0 -- if falsey, set to 1.0
-        assert(type(stepFraction) == 'number', 'stepFraction must be a number from 0.0 to 1.0 inclusive')
-        
-        -- edge cases / early returns
-        if stepFraction >= 1.0 then
-            return me:getRecordingAfter(fromId, group)
-        elseif stepFraction <= 0.0 then
-            return me:getRecording(fromId, group)
+
+        local recordGroup = recordings[group]
+
+        assert(desiredFrameId ~= nil, 'desiredFrameId must be set')
+        assert(self.greaterThan ~= nil, 'greater than comparison method must be set')
+        assert(#recordGroup.indexToId > 0, 'Must be at least one recording to play back')
+
+        local desiredFrame = recordGroup.byId[desiredFrameId]
+
+        if desiredFrame ~= nil then
+            -- if the desired keyframe exists, return it regardless of
+            -- nextFrameId value
+            local nextFrameIndex = desiredFrame.index
+            local nextId = recordGroup.indexToId[nextFrameIndex + 1]
+
+            return nextId, desiredFrame.recording
         end
 
-        -- TODO: Interpolate between two IDs (based on id / index / value?)
-        return me:getRecording(fromId, group)
+        nextFrameId = nextFrameId or recordGroup.indexToId[1]
+
+        if recordGroup.indexToId[1] == nextFrameId and self.greaterThan(nextFrameId, desiredFrameId) then
+
+            -- there is no previous frame (aka; 'nextFrame' is the first frame)
+            -- and the desired frame is 'less than or equal' to the first frame
+            local firstFrame = recordGroup.byId[nextFrameId]
+            local secondFrameId = recordGroup.indexToId[firstFrame.index + 1]
+
+            -- so just return the first frame
+            return secondFrameId, firstFrame.recording
+        end
+
+        local lastFrameIndex = recordGroup.byId[nextFrameId].index - 1
+        local lastFrameId = recordGroup.indexToId[lastFrameIndex]
+
+        -- now we know we need to interpolate, and that desiredFrameId is
+        -- 'greater than' the first frame.
+        -- But first, we need to find the two ids between which to
+        -- interpolate.
+        -- So, we take advantage of the temporal nature of recordings and
+        -- search either forward or backward from the lsat known point.
+
+        if self.greaterThan(desiredFrameId, nextFrameId) then
+            -- search forward for next ids
+            local nextFrameIndex = recordGroup.byId[nextFrameId].index
+            
+            repeat 
+                -- save 'last' values
+                lastFrameIndex = nextFrameIndex
+                lastFrameId = nextFrameId
+
+                -- calculate 'next' values
+                nextFrameId = recordGroup.indexToId[lastFrameIndex + 1]
+                nextFrameIndex = recordGroup.byId[nextFrameId].index
+            until not self.greaterThan(desiredFrameId, nextFrameId)
+
+        elseif self.greaterThan(lastFrameId, desiredFrameId) then
+
+            -- search backward for next ids
+            repeat 
+                -- save 'next' values
+                nextFrameIndex = lastFrameIndex
+                nextFrameId = lastFrameId
+
+                -- calculate 'last' values
+                lastFrameId = recordGroup.indexToId[nextFrameIndex - 1]
+                lastFrameIndex = recordGroup.byId[lastFrameId].index
+            until not self.greaterThan(lastFrameId, desiredFrameId)
+
+        end
+
+        return nextFrameId, self.playbackInterpolator(
+            lastFrameId,
+            desiredFrameId,
+            nextFrameId,
+            self:getRecording(lastFrameId, group),
+            self:getRecordingAfter(nextFrameId, group)
+        )
 
     end
 
