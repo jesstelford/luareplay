@@ -280,16 +280,27 @@ end)
 
 describe('recorder playback method #record', function()
 
-    describe('id parameter', function()
+    describe('desiredFrameId parameter', function()
 
         local Recorder = require "recorder"()
+        local object = require "recordable"({name = 'Baz'})
+        Recorder:setGreaterThanComparison(function() return true end)
+        Recorder:record(1, object)
+
+        it('is required', function()
+            assert.has_error(function() Recorder:playback() end)
+        end)
+
+        it('doesnt accept nil', function()
+            assert.has_error(function() Recorder:playback(nil) end)
+        end)
 
         it('accepts number IDs', function()
             assert.has_no.errors(function() Recorder:playback(1) end)
         end)
 
         it('accepts bool IDs', function()
-            assert.has_no.errors(function() Recorder:playback(true) end)
+            Recorder:playback(true)
         end)
 
         it('accepts string IDs', function()
@@ -306,93 +317,117 @@ describe('recorder playback method #record', function()
 
     end)
 
-    describe('group parameter', function()
+    describe('nextFrameId parameter', function()
 
         local Recorder = require "recorder"()
+        local object = require "recordable"({name = 'Baz'})
+        Recorder:setGreaterThanComparison(function() return true end)
+        Recorder:record(1, object)
 
-        it('accepts string group name', function()
+        it('accepts number IDs', function()
+            assert.has_no.errors(function() Recorder:playback(1, 1) end)
+        end)
+
+        it('accepts bool IDs', function()
+            assert.has_no.errors(function() Recorder:playback(1, true) end)
+        end)
+
+        it('accepts string IDs', function()
             assert.has_no.errors(function() Recorder:playback(1, 'foo') end)
         end)
 
+        it('accepts table IDs', function()
+            assert.has_no.errors(function() Recorder:playback(1, {}) end)
+        end)
+
+        it('accepts function IDs', function()
+            assert.has_no.errors(function() Recorder:playback(1, function() end) end)
+        end)
+
+    end)
+
+    describe('group parameter', function()
+
+        local Recorder = require "recorder"()
+        local object = require "recordable"({name = 'Baz'})
+        Recorder:setGreaterThanComparison(function() return true end)
+
+        it('accepts string group name', function()
+            Recorder:record(1, object, 'foo')
+            assert.has_no.errors(function() Recorder:playback(1, 1, 'foo') end)
+        end)
+
         it('doesnt accept number group name', function()
-            assert.has_error(function() Recorder:playback(1, 1) end)
+            assert.has_error(function() Recorder:playback(1, 1, 1) end)
         end)
 
         it('doesnt accept boolean group name', function()
-            assert.has_error(function() Recorder:playback(1, true) end)
+            assert.has_error(function() Recorder:playback(1, 1, true) end)
         end)
 
         it('doesnt accept table group name', function()
-            assert.has_error(function() Recorder:playback(1, {}) end)
+            assert.has_error(function() Recorder:playback(1, 1, {}) end)
         end)
 
         it('doesnt accept function group name', function()
-            assert.has_error(function() Recorder:playback(1, function() end) end)
+            assert.has_error(function() Recorder:playback(1, 1, function() end) end)
         end)
 
     end)
 
-    describe('stepFraction parameter', function()
+    describe('pre-conditions before usage', function()
 
-        local Recorder = require "recorder"()
 
-        it('accepts number fraction', function()
-            assert.has_no.errors(function() Recorder:playback(1, 'foo', 1.0) end)
+        it('expects greater than method to be set', function()
+            local Recorder = require "recorder"()
+            local objectBar = require "recordable"({name = 'Bar'})
+            Recorder:record(1, objectBar)
+            assert.has_error(function() Recorder:playback(1, 1) end)
         end)
 
-        it('accepts nil fraction', function()
-            assert.has_no.errors(function() Recorder:playback(1, 'foo', nil) end)
-        end)
-
-        it('accepts false fraction', function()
-            assert.has_no.errors(function() Recorder:playback(1, 'foo', false) end)
-        end)
-
-        it('doesnt accept string fraction', function()
-            assert.has_error(function() Recorder:playback(1, 'foo', 'bar') end)
-        end)
-
-        it('doesnt accept boolean fraction', function()
-            assert.has_error(function() Recorder:playback(1, 'foo', true) end)
-        end)
-
-        it('doesnt accept table fraction', function()
-            assert.has_error(function() Recorder:playback(1, 'foo', {}) end)
-        end)
-
-        it('doesnt accept function fraction', function()
-            assert.has_error(function() Recorder:playback(1, 'foo', function() end) end)
+        it('expects at least one recording', function()
+            local Recorder = require "recorder"()
+            Recorder:setGreaterThanComparison(function() return true end)
+            assert.has_error(function() Recorder:playback(1, 1) end)
         end)
 
     end)
 
-    describe('fraction edge cases', function()
+    describe('default interpolation method', function()
 
         local Recorder = require "recorder"()
+
+        it('returns next frame', function()
+            result = Recorder.playbackInterpolator(1, 2, 3, 4, 5)
+            assert.equals(5, result)
+        end)
+
+    end)
+
+    describe('usage', function()
+
+        local Recorder = require "recorder"()
+
         local objectFoo = require "recordable"({name = 'Foo'})
         local objectBar = require "recordable"({name = 'Bar'})
+        local objectBaz = require "recordable"({name = 'Baz'})
         
-        Recorder:record('foo', objectFoo, 'global')
-        Recorder:record('bar', objectBar, 'global')
+        Recorder:record(1, objectFoo)
+        Recorder:record(4, objectBar)
+        Recorder:record(5, objectBaz)
 
-        it("returns given id's recording when fraction < 0.0", function()
-            local recording = Recorder:playback('foo', 'global', -0.5)
-            assert.are.same(objectFoo:serialize(), recording)
+        it('returns the frame if the id exists', function()
+            nextFrameId, recording = Recorder:playback(4, nil)
+            assert.are_same(recording, objectBar)
         end)
 
-        it("returns given id's recording when fraction == 0.0", function()
-            local recording = Recorder:playback('foo', 'global', 0.0)
-            assert.are.same(objectFoo:serialize(), recording)
+        pending('returns the next id if the frame exists and id is null', function()
         end)
 
-        it("returns next id's recording when fraction == 1.0", function()
-            local recording = Recorder:playback('foo', 'global', 1.0)
-            assert.are.same(objectBar:serialize(), Recorder:getRecordingAfter('foo'))
+        pending('returns the next id if the frame exists and id is in future', function()
         end)
 
-        it("returns next id's recording when fraction > 1.0", function()
-            local recording = Recorder:playback('foo', 'global', 1.5)
-            assert.are.same(objectBar:serialize(), Recorder:getRecordingAfter('foo'))
+        pending('returns the next id if the frame exists and id is in past', function()
         end)
 
     end)
