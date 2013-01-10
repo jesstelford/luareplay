@@ -130,6 +130,14 @@ return (function()
 
             -- so just return the first frame
             return secondFrameId, firstFrame.recording
+
+        else
+            local lastFrameId = recordGroup.indexToId[#recordGroup.indexToId]
+            if self.greaterThan(desiredFrameId, lastFrameId) then
+                -- there are no more frames, so return the last along with nil for
+                -- 'nextid'
+                return nil, recordGroup.byId[lastFrameId].recording
+            end
         end
 
         local lastFrameIndex = recordGroup.byId[nextFrameId].index - 1

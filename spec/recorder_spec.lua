@@ -427,17 +427,59 @@ describe('recorder playback method #record', function()
 
         it('returns the next id if the frame exists and id is null', function()
             nextFrameId, recording = Recorder:playback(4, nil)
-            assert.are_same(5, nextFrameId)
+            assert.equals(5, nextFrameId)
         end)
 
         it('returns the next id if the frame exists and id is in future', function()
             nextFrameId, recording = Recorder:playback(1, 5)
-            assert.are_same(4, nextFrameId)
+            assert.equals(4, nextFrameId)
         end)
 
         it('returns the next id if the frame exists and id is in past', function()
             nextFrameId, recording = Recorder:playback(4, 1)
-            assert.are_same(5, nextFrameId)
+            assert.equals(5, nextFrameId)
+        end)
+
+        it('returns the first frame when desired id not greater than first id', function()
+            nextFrameId, recording = Recorder:playback(0)
+            assert.are_same(recording, objectFoo:serialize())
+        end)
+
+        it('returns the second frame id as next id when desired id not greater than first id', function()
+            nextFrameId, recording = Recorder:playback(0)
+            assert.equals(4, nextFrameId)
+        end)
+
+        it('returns the first frame when desired id not greater than first id and nextid set to first id', function()
+            nextFrameId, recording = Recorder:playback(0, 1)
+            assert.are_same(recording, objectFoo:serialize())
+        end)
+
+        it('returns the second frame id as next id when desired id not greater than first id and nextid set to first id', function()
+            nextFrameId, recording = Recorder:playback(0, 1)
+            assert.equals(4, nextFrameId)
+        end)
+
+        it('returns the last frame when desired id greater than last id', function()
+            nextFrameId, recording = Recorder:playback(10)
+            assert.are_same(recording, objectBaz:serialize())
+        end)
+
+        it('returns the nil for frame id as next id when desired id greater than last id', function()
+            nextFrameId, recording = Recorder:playback(10)
+            assert.equals(nil, nextFrameId)
+        end)
+
+        pending('calls interpolation method when desired frame id greater than nextframeid', function()
+        end)
+
+        pending('returns interpolation method when desired frame id greater than nextframeid', function()
+        end)
+
+        pending('calls interpolation method when desired frame id not greater than previous frame id', function()
+        end)
+
+        pending('returns interpolation method when desired frame id not greater than previous frame id', function()
         end)
 
     end)
