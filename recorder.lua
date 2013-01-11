@@ -179,12 +179,23 @@ return (function()
 
         end
 
+        local lastRecording = self:getRecording(lastFrameId, group)
+        local nextRecording = self:getRecordingAfter(nextFrameId, group)
+
+        if lastRecording ~= nil then
+            lastRecording = lastRecording.recording
+        end
+
+        if nextRecording ~= nil then
+            nextRecording = nextRecording.recording
+        end
+
         return nextFrameId, self.playbackInterpolator(
             lastFrameId,
             desiredFrameId,
             nextFrameId,
-            self:getRecording(lastFrameId, group),
-            self:getRecordingAfter(nextFrameId, group)
+            lastRecording,
+            nextRecording
         )
 
     end
