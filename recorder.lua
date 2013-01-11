@@ -30,6 +30,11 @@ return (function()
         self.greaterThan = greaterThan
     end
 
+    function me:setInterpolationMethod(interpolator)
+        assert(type(interpolator) == 'function', 'Must be a method which interpolates between recordings and returns the result')
+        self.playbackInterpolator = interpolator
+    end
+
     --- Take a snapshot recording of the given object
     -- @param id(mixed) The id to store the recording under
     -- @param recordable(table) The item to record. Must have a 'serialize' method
