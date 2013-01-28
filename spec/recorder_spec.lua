@@ -57,29 +57,18 @@ describe('recorder record method #record', function()
             assert.has_no.errors(function() Recorder:record(1, object, 'foo') end)
         end)
 
-        it('doesnt accept number group name', function()
-            local Recorder = require "recorder"()
-            local object = require "recordable"({})
-            assert.has_error(function() Recorder:record(1, object, 1) end)
-        end)
-
-        it('doesnt accept boolean group name', function()
-            local Recorder = require "recorder"()
-            local object = require "recordable"({})
-            assert.has_error(function() Recorder:record(1, object, true) end)
-        end)
-
-        it('doesnt accept table group name', function()
-            local Recorder = require "recorder"()
-            local object = require "recordable"({})
-            assert.has_error(function() Recorder:record(1, object, {}) end)
-        end)
-
-        it('doesnt accept function group name', function()
-            local Recorder = require "recorder"()
-            local object = require "recordable"({})
-            assert.has_error(function() Recorder:record(1, object, function() end) end)
-        end)
+        for _, data in pairs({
+            {name = 'doesnt accept number group name', value = 1},
+            {name = 'doesnt accept bool group name', value = true},
+            {name = 'doesnt accept table group name', value = {}},
+            {name = 'doesnt accept function group name', value = function() end},
+        }) do
+            it(data.name, function()
+                local Recorder = require "recorder"()
+                local object = require "recordable"({})
+                assert.has_error(function() Recorder:record(1, object, data.value) end)
+            end)
+        end
 
     end)
 
@@ -114,25 +103,17 @@ describe('recorder getRecording method #record', function()
             assert.has_no.errors(function() Recorder:getRecording(1, 'foo') end)
         end)
 
-        it('doesnt accept number group name', function()
-            local Recorder = require "recorder"()
-            assert.has_error(function() Recorder:getRecording(1, 1) end)
-        end)
-
-        it('doesnt accept boolean group name', function()
-            local Recorder = require "recorder"()
-            assert.has_error(function() Recorder:getRecording(1, true) end)
-        end)
-
-        it('doesnt accept table group name', function()
-            local Recorder = require "recorder"()
-            assert.has_error(function() Recorder:getRecording(1, {}) end)
-        end)
-
-        it('doesnt accept function group name', function()
-            local Recorder = require "recorder"()
-            assert.has_error(function() Recorder:getRecording(1, function() end) end)
-        end)
+        for _, data in pairs({
+            {name = 'doesnt accept number group name', value = 1},
+            {name = 'doesnt accept bool group name', value = true},
+            {name = 'doesnt accept table group name', value = {}},
+            {name = 'doesnt accept function group name', value = function() end},
+        }) do
+            it(data.name, function()
+                local Recorder = require "recorder"()
+                assert.has_error(function() Recorder:getRecording(1, data.value) end)
+            end)
+        end
 
     end)
 
@@ -191,25 +172,17 @@ describe('recorder getRecordingAfter method #record', function()
             assert.has_no.errors(function() Recorder:getRecordingAfter(1, 'foo') end)
         end)
 
-        it('doesnt accept number group name', function()
-            local Recorder = require "recorder"()
-            assert.has_error(function() Recorder:getRecordingAfter(1, 1) end)
-        end)
-
-        it('doesnt accept boolean group name', function()
-            local Recorder = require "recorder"()
-            assert.has_error(function() Recorder:getRecordingAfter(1, true) end)
-        end)
-
-        it('doesnt accept table group name', function()
-            local Recorder = require "recorder"()
-            assert.has_error(function() Recorder:getRecordingAfter(1, {}) end)
-        end)
-
-        it('doesnt accept function group name', function()
-            local Recorder = require "recorder"()
-            assert.has_error(function() Recorder:getRecordingAfter(1, function() end) end)
-        end)
+        for _, data in pairs({
+            {name = 'doesnt accept number group name', value = 1},
+            {name = 'doesnt accept bool group name', value = true},
+            {name = 'doesnt accept table group name', value = {}},
+            {name = 'doesnt accept function group name', value = function() end},
+        }) do
+            it(data.name, function()
+                local Recorder = require "recorder"()
+                assert.has_error(function() Recorder:getRecordingAfter(1, data.value) end)
+            end)
+        end
 
     end)
 
@@ -279,25 +252,17 @@ describe('recorder playback method #record', function()
             assert.has_error(function() Recorder:playback(nil) end)
         end)
 
-        it('accepts number IDs', function()
-            assert.has_no.errors(function() Recorder:playback(1) end)
-        end)
-
-        it('accepts bool IDs', function()
-            Recorder:playback(true)
-        end)
-
-        it('accepts string IDs', function()
-            assert.has_no.errors(function() Recorder:playback('foo') end)
-        end)
-
-        it('accepts table IDs', function()
-            assert.has_no.errors(function() Recorder:playback({}) end)
-        end)
-
-        it('accepts function IDs', function()
-            assert.has_no.errors(function() Recorder:playback(function() end) end)
-        end)
+        for _, data in pairs({
+            {name = 'accepts number IDs', value = 1},
+            {name = 'accepts string IDs', value = 'foo'},
+            {name = 'accepts bool IDs', value = true},
+            {name = 'accepts table IDs', value = {}},
+            {name = 'accepts function IDs', value = function() end},
+        }) do
+            it(data.name, function()
+                assert.has_no.errors(function() Recorder:playback(data.value) end)
+            end)
+        end
 
     end)
 
@@ -308,25 +273,17 @@ describe('recorder playback method #record', function()
         Recorder:setGreaterThanComparison(function() return true end)
         Recorder:record(1, object)
 
-        it('accepts number IDs', function()
-            assert.has_no.errors(function() Recorder:playback(1, 1) end)
-        end)
-
-        it('accepts bool IDs', function()
-            assert.has_no.errors(function() Recorder:playback(1, true) end)
-        end)
-
-        it('accepts string IDs', function()
-            assert.has_no.errors(function() Recorder:playback(1, 'foo') end)
-        end)
-
-        it('accepts table IDs', function()
-            assert.has_no.errors(function() Recorder:playback(1, {}) end)
-        end)
-
-        it('accepts function IDs', function()
-            assert.has_no.errors(function() Recorder:playback(1, function() end) end)
-        end)
+        for _, data in pairs({
+            {name = 'accepts number IDs', value = 1},
+            {name = 'accepts string IDs', value = 'foo'},
+            {name = 'accepts bool IDs', value = true},
+            {name = 'accepts table IDs', value = {}},
+            {name = 'accepts function IDs', value = function() end},
+        }) do
+            it(data.name, function()
+                assert.has_no.errors(function() Recorder:playback(1, data.value) end)
+            end)
+        end
 
     end)
 
@@ -341,21 +298,16 @@ describe('recorder playback method #record', function()
             assert.has_no.errors(function() Recorder:playback(1, 1, 'foo') end)
         end)
 
-        it('doesnt accept number group name', function()
-            assert.has_error(function() Recorder:playback(1, 1, 1) end)
-        end)
-
-        it('doesnt accept boolean group name', function()
-            assert.has_error(function() Recorder:playback(1, 1, true) end)
-        end)
-
-        it('doesnt accept table group name', function()
-            assert.has_error(function() Recorder:playback(1, 1, {}) end)
-        end)
-
-        it('doesnt accept function group name', function()
-            assert.has_error(function() Recorder:playback(1, 1, function() end) end)
-        end)
+        for _, data in pairs({
+            {name = 'doesnt accept number IDs', value = 1},
+            {name = 'doesnt accept bool IDs', value = true},
+            {name = 'doesnt accept table IDs', value = {}},
+            {name = 'doesnt accept function IDs', value = function() end},
+        }) do
+            it(data.name, function()
+                assert.has_error(function() Recorder:playback(1, 1, data.value) end)
+            end)
+        end
 
     end)
 
@@ -406,55 +358,31 @@ describe('recorder playback method #record', function()
 
         describe('return values', function()
 
-            it('returns the frame if the id exists', function()
-                nextFrameId, recording = Recorder:playback(4, nil)
-                assert.are_same(recording, objectBar:serialize())
-            end)
+            for _, data in pairs({
+                {name = 'returns the frame if the id exists', values = {4, nil, objectBar:serialize()}},
+                {name = 'returns the first frame when desired id not greater than first id', values = {0, nil, objectFoo:serialize()}},
+                {name = 'returns the first frame when desired id not greater than first id and nextid set to first id', values = {0, 1, objectFoo:serialize()}},
+                {name = 'returns the last frame when desired id greater than last id', values = {10, nil, objectBaz:serialize()}},
+            }) do
+                it(data.name, function()
+                    nextFrameId, recording = Recorder:playback(data.values[1], data.values[2])
+                    assert.are_same(data.values[3], recording)
+                end)
+            end
 
-            it('returns the next id if the frame exists and id is null', function()
-                nextFrameId, recording = Recorder:playback(4, nil)
-                assert.equals(5, nextFrameId)
-            end)
-
-            it('returns the next id if the frame exists and id is in future', function()
-                nextFrameId, recording = Recorder:playback(1, 5)
-                assert.equals(4, nextFrameId)
-            end)
-
-            it('returns the next id if the frame exists and id is in past', function()
-                nextFrameId, recording = Recorder:playback(4, 1)
-                assert.equals(5, nextFrameId)
-            end)
-
-            it('returns the first frame when desired id not greater than first id', function()
-                nextFrameId, recording = Recorder:playback(0)
-                assert.are_same(recording, objectFoo:serialize())
-            end)
-
-            it('returns the second frame id as next id when desired id not greater than first id', function()
-                nextFrameId, recording = Recorder:playback(0)
-                assert.equals(4, nextFrameId)
-            end)
-
-            it('returns the first frame when desired id not greater than first id and nextid set to first id', function()
-                nextFrameId, recording = Recorder:playback(0, 1)
-                assert.are_same(recording, objectFoo:serialize())
-            end)
-
-            it('returns the second frame id as next id when desired id not greater than first id and nextid set to first id', function()
-                nextFrameId, recording = Recorder:playback(0, 1)
-                assert.equals(4, nextFrameId)
-            end)
-
-            it('returns the last frame when desired id greater than last id', function()
-                nextFrameId, recording = Recorder:playback(10)
-                assert.are_same(recording, objectBaz:serialize())
-            end)
-
-            it('returns the nil for frame id as next id when desired id greater than last id', function()
-                nextFrameId, recording = Recorder:playback(10)
-                assert.equals(nil, nextFrameId)
-            end)
+            for _, data in pairs({
+                {name = 'returns the next id if the frame exists and id is null', values = {4, nil, 5}},
+                {name = 'returns the next id if the frame exists and id is in future', values = {1, 5, 4}},
+                {name = 'returns the next id if the frame exists and id is in past', values = {4, 1, 5}},
+                {name = 'returns the second frame id as next id when desired id not greater than first id', values = {0, nil, 4}},
+                {name = 'returns the second frame id as next id when desired id not greater than first id and nextid set to first id', values = {0, 1, 4}},
+                {name = 'returns the nil for frame id as next id when desired id greater than last id', values = {10, nil, nil}}
+            }) do
+                it(data.name, function()
+                    nextFrameId, recording = Recorder:playback(data.values[1], data.values[2])
+                    assert.equals(data.values[3], nextFrameId)
+                end)
+            end
 
         end)
 
