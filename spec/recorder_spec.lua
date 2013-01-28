@@ -503,7 +503,7 @@ describe('recorder playback method #record', function()
             end)
 
             it('default interpolation method returns recording of next id', function()
-                nextFrameId, recording = Recorder:playback(2)
+                local nextFrameId, recording = Recorder:playback(2)
                 local serialized = objectBar:serialize()
                 assert.are.same(recording, serialized)
             end)

@@ -153,7 +153,7 @@ return (function()
         -- But first, we need to find the two ids between which to
         -- interpolate.
         -- So, we take advantage of the temporal nature of recordings and
-        -- search either forward or backward from the lsat known point.
+        -- search either forward or backward from the last known point.
 
         if self.greaterThan(desiredFrameId, nextFrameId) then
             -- search forward for next ids
@@ -185,17 +185,9 @@ return (function()
         end
 
         local lastRecording = self:getRecording(lastFrameId, group)
-        local nextRecording = self:getRecordingAfter(nextFrameId, group)
+        local nextRecording = self:getRecording(nextFrameId, group)
 
-        if lastRecording ~= nil then
-            lastRecording = lastRecording.recording
-        end
-
-        if nextRecording ~= nil then
-            nextRecording = nextRecording.recording
-        end
-
-        return nextFrameId, self.playbackInterpolator(
+        local interpolatedRecording = self.playbackInterpolator(
             lastFrameId,
             desiredFrameId,
             nextFrameId,
@@ -203,6 +195,7 @@ return (function()
             nextRecording
         )
 
+        return nextFrameId, interpolatedRecording
     end
 
     return me
