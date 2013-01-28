@@ -488,18 +488,25 @@ describe('recorder playback method #record', function()
             Recorder:record(1, objectFoo)
             Recorder:record(4, objectBar)
 
+            -- setup the spy to track calls to this method
+            spy.on(Recorder, "playbackInterpolator")
+
             Recorder:setGreaterThanComparison(function(left, right)
                 return left > right
             end)
 
-            pending('calls interpolation method when desired frame id greater than nextframeid', function()
-                Recorder:playback(2)
-                -- assert that interpolation method was called
+            after_each(function()
+                Recorder.playbackInterpolator.calls = {} -- reset the spied calls
             end)
 
-            pending('calls interpolation method when desired frame id not greater than next frame id', function()
+            it('calls interpolation method when desired frame id greater than nextframeid', function()
+                Recorder:playback(2)
+                assert.spy(Recorder.playbackInterpolator).was.called(1)
+            end)
+
+            it('calls interpolation method when desired frame id not greater than next frame id', function()
                 Recorder:playback(2, 4)
-                -- assert that interpolation method was called
+                assert.spy(Recorder.playbackInterpolator).was.called(1)
             end)
 
             it('default interpolation method returns recording of next id', function()
@@ -533,6 +540,14 @@ describe('recorder playback method #record', function()
                 return {called = true}
             end)
 
+            -- setup the spy to track calls to this method
+            spy.on(Recorder, "playbackInterpolator")
+
+            -- after each test, reset the number of calls
+            after_each(function()
+                Recorder.playbackInterpolator.calls = {} -- reset the spied calls
+            end)
+
             it('returns interpolation method when desired frame id greater than nextframeid', function()
                 nextFrameId, recording = Recorder:playback(2)
                 assert.are.same(recording, {called = true})
@@ -543,19 +558,22 @@ describe('recorder playback method #record', function()
                 assert.are.same(recording, {called = true})
             end)
 
-            pending('interpolation method called with correct parameters when requested Id between first and second ids', function()
+            it('interpolation method called with correct parameters when requested Id between first and second ids', function()
                 nextFrameId, recording = Recorder:playback(2, 4)
                 -- assert called with: (1, 2, 3, objectFoo, objectBar)
+                assert.spy(Recorder.playbackInterpolator).was.called_with(1, 2, 4, objectFoo:serialize(), objectBar:serialize())
             end)
 
-            pending('interpolation method called with correct parameters when requested Id between middle ids', function()
+            it('interpolation method called with correct parameters when requested Id between middle ids', function()
                 nextFrameId, recording = Recorder:playback(4.5, 5)
                 -- assert called with: (4, 4.5, 5, objectBar, objectBaz)
+                assert.spy(Recorder.playbackInterpolator).was.called_with(4, 4.5, 5, objectBar:serialize(), objectBaz:serialize())
             end)
 
-            pending('interpolation method called with correct parameters when requested Id between last and second last ids', function()
+            it('interpolation method called with correct parameters when requested Id between last and second last ids', function()
                 nextFrameId, recording = Recorder:playback(6, 8)
                 -- assert called with: (5, 6, 8, objectBaz, objectZip)
+                assert.spy(Recorder.playbackInterpolator).was.called_with(5, 6, 8, objectBaz:serialize(), objectZip:serialize())
             end)
 
         end)
