@@ -39,25 +39,17 @@ describe('recorder record method #record', function()
             object = nil
         end)
 
-        it('accepts number IDs', function()
-            assert.has_no.errors(function() Recorder:record(1, object) end)
-        end)
-
-        it('accepts bool IDs', function()
-            assert.has_no.errors(function() Recorder:record(true, object) end)
-        end)
-
-        it('accepts string IDs', function()
-            assert.has_no.errors(function() Recorder:record('foo', object) end)
-        end)
-
-        it('accepts table IDs', function()
-            assert.has_no.errors(function() Recorder:record({}, object) end)
-        end)
-
-        it('accepts function IDs', function()
-            assert.has_no.errors(function() Recorder:record(function() end, object) end)
-        end)
+        for _, data in pairs({
+            {name = 'accepts number IDs', value = 1},
+            {name = 'accepts bool IDs', value = true},
+            {name = 'accepts string IDs', value = 'foo'},
+            {name = 'accepts table IDs', value = {}},
+            {name = 'accepts function IDs', value = function() end},
+        }) do
+            it(data.name, function()
+                assert.has_no.errors(function() Recorder:record(data.value, object) end)
+            end)
+        end
 
         it('only accepts unique IDs', function()
             Recorder:record(1, object)
