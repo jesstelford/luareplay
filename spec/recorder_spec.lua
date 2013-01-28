@@ -26,19 +26,6 @@ describe('recorder record method #record', function()
 
     describe('id parameter', function()
 
-        local Recorder = nil
-        local object = nil
-
-        before_each(function()
-            Recorder = require "recorder"()
-            object = require "recordable"({})
-        end)
-
-        after_each(function()
-            Recorder = nil
-            object = nil
-        end)
-
         for _, data in pairs({
             {name = 'accepts number IDs', value = 1},
             {name = 'accepts bool IDs', value = true},
@@ -47,11 +34,15 @@ describe('recorder record method #record', function()
             {name = 'accepts function IDs', value = function() end},
         }) do
             it(data.name, function()
+                local Recorder = require "recorder"()
+                local object = require "recordable"({})
                 assert.has_no.errors(function() Recorder:record(data.value, object) end)
             end)
         end
 
         it('only accepts unique IDs', function()
+            local Recorder = require "recorder"()
+            local object = require "recordable"({})
             Recorder:record(1, object)
             assert.has_error(function() Recorder:record(1, object) end)
         end)
