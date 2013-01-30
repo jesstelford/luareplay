@@ -76,12 +76,23 @@ describe('Frames are tables', function()
 end)
 
 describe('Frame values are number assertions', function()
-    
-    pending('Has error when a frame value is not a number', function()
+
+    local interpolator = require "interpolator.linear"
+
+    it('Only accepts frame values that are numbers', function()
+        assert.has_no.errors(function() interpolator(1, 1, 1, {foo = 1}, {foo = 2}) end)
     end)
 
-    pending('Has no errors when all frame values are numbers', function()
-    end)
+    for _, data in pairs({
+        {name = 'has error when frame has bool value', value = true},
+        {name = 'has error when frame has string value', value = 'foo'},
+        {name = 'has error when frame has table value', value = {}},
+        {name = 'has error when frame has function value', value = function() end},
+    }) do
+        it(data.name, function()
+            assert.has_error(function() interpolator(1, 1, 1, {foo = data.value}, {foo = data.value}) end)
+        end)
+    end
 
 end)
 
