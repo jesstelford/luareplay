@@ -12,11 +12,17 @@ return (function(lastFrameId, requestedFrameId, nextFrameId, lastFrame, nextFram
     local interpolatePercentage = (requestedFrameId - lastFrameId) / (nextFrameId - lastFrameId)
 
     local result = {}
+    local keys = {}
 
     for key, value in pairs(lastFrame) do
         assert(nextFrame[key] ~= nil, 'Next Frame must contain same keys as Last Frame when using Linear Interpolation')
         assert(type(value) == 'number' and type(nextFrame[key]) == 'number', 'All Frame values must be numbers for Linear Interpolation')
         result[key] = lastFrame[key] + ((nextFrame[key] - lastFrame[key]) * interpolatePercentage)
+        keys[key] = true
+    end
+
+    for key, value in pairs(nextFrame) do
+        assert(keys[key] == true, 'Next Frame must contain same keys as Last Frame when using Linear Interpolation')
     end
 
     return result
