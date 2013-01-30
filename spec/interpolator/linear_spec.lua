@@ -2,14 +2,44 @@ require "spec.bootstrap"
 
 describe('ID is number assertions', function()
 
-    pending('Only accepts number ID for lastFrameId', function()
+    local interpolator = require "interpolator.linear"
+
+    it('Only accepts number IDs', function()
+        assert.has_no.errors(function() interpolator(1, 1, 1, {}, {}) end)
     end)
 
-    pending('Only accepts number ID for requestedFrameId', function()
-    end)
+    for _, data in pairs({
+        {name = 'lastFrameId doesnt accept bool IDs', value = true},
+        {name = 'lastFrameId doesnt accept string IDs', value = 'foo'},
+        {name = 'lastFrameId doesnt accept table IDs', value = {}},
+        {name = 'lastFrameId doesnt accept function IDs', value = function() end},
+    }) do
+        it(data.name, function()
+            assert.has_error(function() interpolator(data.value, 1, 1, {}, {}) end)
+        end)
+    end
 
-    pending('Only accepts number ID for nextFrameId', function()
-    end)
+    for _, data in pairs({
+        {name = 'requestedFrameId doesnt accept bool IDs', value = true},
+        {name = 'requestedFrameId doesnt accept string IDs', value = 'foo'},
+        {name = 'requestedFrameId doesnt accept table IDs', value = {}},
+        {name = 'requestedFrameId doesnt accept function IDs', value = function() end},
+    }) do
+        it(data.name, function()
+            assert.has_error(function() interpolator(1, data.value, 1, {}, {}) end)
+        end)
+    end
+
+    for _, data in pairs({
+        {name = 'nextFrameId doesnt accept bool IDs', value = true},
+        {name = 'nextFrameId doesnt accept string IDs', value = 'foo'},
+        {name = 'nextFrameId doesnt accept table IDs', value = {}},
+        {name = 'nextFrameId doesnt accept function IDs', value = function() end},
+    }) do
+        it(data.name, function()
+            assert.has_error(function() interpolator(1, 1, data.value, {}, {}) end)
+        end)
+    end
 
 end)
 
