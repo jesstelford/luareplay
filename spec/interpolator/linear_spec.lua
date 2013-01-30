@@ -45,11 +45,34 @@ end)
 
 describe('Frames are tables', function()
 
-    pending('Only accepts table for lastFrame', function()
+    local interpolator = require "interpolator.linear"
+
+    it('Only accepts table frames', function()
+        assert.has_no.errors(function() interpolator(1, 1, 1, {}, {}) end)
     end)
 
-    pending('Only accepts table for nextFrame', function()
-    end)
+    for _, data in pairs({
+        {name = 'lastFrame doesnt accept bool IDs', value = true},
+        {name = 'lastFrame doesnt accept string IDs', value = 'foo'},
+        {name = 'lastFrame doesnt accept number IDs', value = 1},
+        {name = 'lastFrame doesnt accept function IDs', value = function() end},
+    }) do
+        it(data.name, function()
+            assert.has_error(function() interpolator(1, 1, 1, data.value, {}) end)
+        end)
+    end
+
+    for _, data in pairs({
+        {name = 'nextFrame doesnt accept bool IDs', value = true},
+        {name = 'nextFrame doesnt accept string IDs', value = 'foo'},
+        {name = 'nextFrame doesnt accept number IDs', value = 1},
+        {name = 'nextFrame doesnt accept function IDs', value = function() end},
+    }) do
+        it(data.name, function()
+            assert.has_error(function() interpolator(1, 1, 1, {}, data.value) end)
+        end)
+    end
+
 end)
 
 describe('Frame values are number assertions', function()
