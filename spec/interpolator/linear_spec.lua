@@ -103,7 +103,7 @@ describe('Linear Interpolation assertions', function()
     pending('Interpolates Linearly when nextFrame values are less than lastFrame values', function()
     end)
 
-    pending('Returns the same Frame when both last and next Frames are identical', function()
+    pending('Returns the next Frame when both last and next Frames are identical', function()
     end)
 
 end)
