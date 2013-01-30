@@ -6,6 +6,8 @@ return (function(lastFrameId, requestedFrameId, nextFrameId, lastFrame, nextFram
     assert(type(lastFrameId) == 'number', 'Frame IDs must be numbers for Linear Interpolation')
     assert(type(requestedFrameId) == 'number', 'Frame IDs must be numbers for Linear Interpolation')
     assert(type(nextFrameId) == 'number', 'Frame IDs must be numbers for Linear Interpolation')
+    assert(type(lastFrame) == 'table', 'Frames must be tables for Linear Interpolation')
+    assert(type(nextFrame) == 'table', 'Frames must be tables for Linear Interpolation')
 
     local interpolatePercentage = (requestedFrameId - lastFrameId) / (nextFrameId - lastFrameId)
 

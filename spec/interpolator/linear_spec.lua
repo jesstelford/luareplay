@@ -13,6 +13,15 @@ describe('ID is number assertions', function()
 
 end)
 
+describe('Frames are tables', function()
+
+    pending('Only accepts table for lastFrame', function()
+    end)
+
+    pending('Only accepts table for nextFrame', function()
+    end)
+end)
+
 describe('Frame values are number assertions', function()
     
     pending('Has error when a frame value is not a number', function()
