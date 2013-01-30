@@ -111,13 +111,91 @@ describe('Frame keys exist in both frames assertions', function()
 end)
 
 describe('Linear Interpolation assertions', function()
-    pending('Interpolates Linearly', function()
+
+    local interpolator = require "interpolator.linear"
+
+    it('Interpolates Linearly', function()
+
+        local lastFrame = {
+            foo = 10
+        }
+
+        local nextFrame = {
+            foo = 14
+        }
+
+        local result = interpolator(1, 2, 3, lastFrame, nextFrame)
+
+        assert.are_same(
+            {
+                foo = 12
+            },
+            result
+        )
+
     end)
 
-    pending('Interpolates Linearly when nextFrame values are less than lastFrame values', function()
+    it('Interpolates Linearly when nextFrame values are less than lastFrame values', function()
+
+        local lastFrame = {
+            foo = 14
+        }
+
+        local nextFrame = {
+            foo = 10
+        }
+
+        local result = interpolator(1, 2, 3, lastFrame, nextFrame)
+
+        assert.are_same(
+            {
+                foo = 12
+            },
+            result
+        )
+
     end)
 
-    pending('Returns the next Frame when both last and next Frames are identical', function()
+    it('Returns the next Frame when both last and next Frames are identical', function()
+
+        local lastFrame = {
+            foo = 10
+        }
+
+        local nextFrame = {
+            foo = 10
+        }
+
+        local result = interpolator(1, 2, 3, lastFrame, nextFrame)
+
+        assert.are_same(
+            {
+                foo = 10
+            },
+            result
+        )
+
+    end)
+
+    it('Returns the last Frame when all IDs are identical', function()
+
+        local lastFrame = {
+            foo = 10
+        }
+
+        local nextFrame = {
+            foo = 14
+        }
+
+        local result = interpolator(1, 1, 1, lastFrame, nextFrame)
+
+        assert.are_same(
+            {
+                foo = 10
+            },
+            result
+        )
+
     end)
 
 end)

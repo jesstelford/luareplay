@@ -9,7 +9,11 @@ return (function(lastFrameId, requestedFrameId, nextFrameId, lastFrame, nextFram
     assert(type(lastFrame) == 'table', 'Frames must be tables for Linear Interpolation')
     assert(type(nextFrame) == 'table', 'Frames must be tables for Linear Interpolation')
 
-    local interpolatePercentage = (requestedFrameId - lastFrameId) / (nextFrameId - lastFrameId)
+    local interpolatePercentage = 0
+
+    if (nextFrameId - lastFrameId) ~= 0 then
+        interpolatePercentage = (requestedFrameId - lastFrameId) / (nextFrameId - lastFrameId)
+    end
 
     local result = {}
     local keys = {}
