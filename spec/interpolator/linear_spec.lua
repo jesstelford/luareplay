@@ -97,17 +97,20 @@ describe('Frame values are number assertions', function()
 end)
 
 describe('Frame keys exist in both frames assertions', function()
+
+    local interpolator = require "interpolator.linear"
     
-    pending('Has error when frame key exists in lastFrame, but not nextFrame', function()
+    it('Has error when frame key exists in lastFrame, but not nextFrame', function()
+        assert.has_error(function() interpolator(1, 1, 1, {foo = 1}, {}) end)
     end)
     
-    pending('Has error when frame key exists in nextFrame, but not lastFrame', function()
+    it('Has error when frame key exists in nextFrame, but not lastFrame', function()
+        assert.has_error(function() interpolator(1, 1, 1, {}, {foo = 1}) end)
     end)
 
 end)
 
 describe('Linear Interpolation assertions', function()
-    
     pending('Interpolates Linearly', function()
     end)
 
