@@ -21,3 +21,10 @@ replay.
 # License
 
 This software is covered under the FreeBSD License. See LICENSE for more.
+
+## Donations
+
+<img src="http://dogecoin.com/img/dogecoin-300.png" width=100 height=100 align=right />
+Like what I've created? *So do I!* I develop this project in my spare time, free for the community.
+
+If you'd like to say thanks, buy me a beer by **tipping with Dogecoin**: *DFN95BZeZmA8UwqW5PPqKJ77ivqoTJeoHA*
